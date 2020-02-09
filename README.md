@@ -1,0 +1,2 @@
+# Sentiment-Analysis-BERT-FedCommunication
+This is a end to end machine learning solution that uses deep learning NLP models (BERT) to carry out aspect based sentiment analysis on Federal Reserve Communication. The communication medium can be written text (minutes, statements, surveys) or audio (live press conferences, speeches). Extensive use of Google Cloud Platform (GCP) to carry out data ingestion, data engineering, model training and model serving. Technologies used are: Apache Beam (DataFlow), Apache Airflow, TensorFlow, BERT, TPU's , GCP AI Platform

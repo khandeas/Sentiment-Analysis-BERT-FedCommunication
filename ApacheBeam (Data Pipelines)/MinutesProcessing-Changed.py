@@ -34,9 +34,7 @@ class RunTimeOptions(PipelineOptions):
 
 class WordExtractingDoFn_Final(beam.DoFn):
 
-    def __init__(self, min_chg_year=2009):
-        # TODO(BEAM-6158): Revert the workaround once we can pickle super() on py3.
-        # super(WordExtractingDoFn, self).__init__()
+    def __init__(self, min_chg_year=2009):    
         beam.DoFn.__init__(self)
         self.min_chg_year = min_chg_year
 
@@ -85,8 +83,8 @@ class WordExtractingDoFn_Final(beam.DoFn):
             results_end = re.finditer(re_end_para, statement.text)
 
             try:
-                first, *_ = results_end  # unpacking of iteration. we need the first occurence of 'Voted for this**'
-                start_pos = 0  # set the initial starting position to be zero
+                first, *_ = results_end  
+                start_pos = 0  
                 end_pos = first.start()
                 # check for the first start position that is before the end position
                 for x in results_start:
@@ -96,7 +94,7 @@ class WordExtractingDoFn_Final(beam.DoFn):
                         start_pos = x.end()
                 if (start_pos != 0):
                     content = statement.text[
-                              start_pos:end_pos]  # use the spans from first and last to determine text to extract
+                              start_pos:end_pos]  
                     words = content
                 else:
                     print('file had a 0 start {}'.format(element[0]))
@@ -107,17 +105,17 @@ class WordExtractingDoFn_Final(beam.DoFn):
         # split the paragraphs into sentences
 
         if len(words) > 0:
-            re_us = re.compile(r'(U\.S\.).')  # U.S. gives issues while trying to split. replace with USA
+            re_us = re.compile(r'(U\.S\.).')  
             filtered_str = re.sub(re_us, 'USA ', words)
 
             re_blank = re.compile(
-                r'(\\\\r\\\\n|(\s){2,})')  # filter out unwanted spaces, tabs. especially from older html files
+                r'(\\\\r\\\\n|(\s){2,})')  
             filtered_str = re.sub(re_blank, ' ', filtered_str)
 
-            re_encode_issues = re.compile(r'(\\x.{2})')  # encoding issues with utf
+            re_encode_issues = re.compile(r'(\\x.{2})')  
             filtered_str = re.sub(re_encode_issues, '', filtered_str)
 
-            re_apos_issues = re.compile(r"(\\')")  # encoding issues with utf
+            re_apos_issues = re.compile(r"(\\')")  
             filtered_str = re.sub(re_apos_issues, '', filtered_str)
 
             # next, split the file
@@ -125,7 +123,7 @@ class WordExtractingDoFn_Final(beam.DoFn):
 
 
         return [(element[0],
-                 words)]  ##Always return iterables. Lists are safest options. otherwise, the resultant pcollection will have issues
+                 words)]  
 
 
 
@@ -139,18 +137,12 @@ def run():
 
     # instantiate PipelineOptions obj_ect using options dictionary
     pipeline_options = PipelineOptions()
+
     # Save main session state so pickled functions and classes
-    # defined in __main__ can be unpickled
     pipeline_options.view_as(SetupOptions).save_main_session = True
 
     # read the input,output and category file arguments as object
     runtime_options = PipelineOptions().view_as(RunTimeOptions)
-
-    # set up variables that use runtime options
-    # output_prefix = 'gs://khandeas-fedminutesanalysis/dataflow/processed/processedminutes'
-    # job_name = str(runtime_options.category) + '-processing-' + '-' + datetime.datetime.now().strftime('%y%m%d-%H%M%S')
-
-
 
 
     # set up the pipeline
@@ -176,7 +168,5 @@ def run():
     result.wait_until_finish()
 
 
-if __name__ == '__main__':
-    # set environment variables
-    #os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'C:\Users\ashay\Documents\Projects\GCP - FedStatements\AuthenticationJSON\FedMinutesAnalysis-db6fc23d5d6d.json'
+if __name__ == '__main__':  
     run()

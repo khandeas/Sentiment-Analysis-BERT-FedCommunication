@@ -3,7 +3,7 @@ This is a end to end machine learning solution that uses deep learning NLP model
 
 
 ### AirFlow Dags
-This folder contains AirFlow DAGs for Orchestration of Data Processing Tasks. The DailyProcessingDAG is run on once a day and checks for any new events on the FOMC website through a web scapper. It triggers appropriate DAGS (minutesprocessing for example) as per the schedule of the new event. The MinutesProcessingDAG is one such DAG that processes Fed Minutes as soon as the document is released on the Federal Reserve website on the scheduled Date/Time. 
+This folder contains AirFlow DAGs for Orchestration of Data Processing Tasks. The DailyProcessingDAG is run once a day and checks for any new events on the FOMC website through a web scapper. It triggers appropriate DAGS (minutesprocessing for example) as per the schedule of the new event. The MinutesProcessingDAG is one such DAG that processes Fed Minutes as soon as the document is released on the Federal Reserve website on the scheduled Date/Time. 
 
 ### ApacheBeam (Data Pipelines)
 This folder contains  data processing pipelines developed using Apache Beam. Its flexible enough to be used for both Batch as well as Online Train/Prediction Jobs. During the model training phase, the pipeline was run on the GCP DataFlow runner to take advantage of Parallel Execution. In production/serving, it is run using the DirectRunner to save on processing time. Its created as a template in GCP DataFlow to allow for easier calling by AirFlow DAGs.
